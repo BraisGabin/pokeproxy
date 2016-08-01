@@ -8,6 +8,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 
+import com.braisgabin.pokeproxy.utils.TimberHttpFilters;
+
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersSource;
 import org.littleshoot.proxy.HttpProxyServer;
@@ -41,7 +43,7 @@ public class ProxyService extends Service {
           @Override
           public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext ctx) {
             Timber.i(originalRequest.getUri());
-            return null;
+            return new TimberHttpFilters(originalRequest.getUri());
           }
 
           @Override
