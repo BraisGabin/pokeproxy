@@ -31,4 +31,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
 
     compile 'org.littleshoot:littleproxy:1.1.0'
+
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
 }
