@@ -13,7 +13,13 @@ import com.braisgabin.pokeproxy.utils.TimberHttpFilters;
 import org.littleshoot.proxy.HttpFilters;
 import org.littleshoot.proxy.HttpFiltersSource;
 import org.littleshoot.proxy.HttpProxyServer;
+import org.littleshoot.proxy.MitmManager;
 import org.littleshoot.proxy.impl.DefaultHttpProxyServer;
+import org.littleshoot.proxy.mitm.Authority;
+import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
+import org.littleshoot.proxy.mitm.RootCertificateException;
+
+import java.io.File;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpRequest;
@@ -39,6 +45,7 @@ public class ProxyService extends Service {
     startForeground(1, notification());
     proxyServer = DefaultHttpProxyServer.bootstrap()
         .withPort(8080)
+        .withManInTheMiddle(mitm(authority(getFilesDir())))
         .withFiltersSource(new HttpFiltersSource() {
           @Override
           public HttpFilters filterRequest(HttpRequest originalRequest, ChannelHandlerContext ctx) {
@@ -59,6 +66,21 @@ public class ProxyService extends Service {
         .start();
 
     return Service.START_STICKY;
+  }
+
+  private MitmManager mitm(Authority authority) {
+    try {
+      return new CertificateSniffingMitmManager(authority);
+    } catch (RootCertificateException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private Authority authority(File baseDir) {
+    return new Authority(baseDir,
+        "PokeProxy", new char[0],
+        "Poke Proxy", "Proxy to read Pokémon Go responses",
+        "Certificate Authority", "Poke Proxy", "This certificate is to allow a man in the middle to read Pokémon Go responses.");
   }
 
   private Notification notification() {

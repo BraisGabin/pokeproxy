@@ -18,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/BCKEY.DSA'
+        exclude 'META-INF/BCKEY.SF'
+    }
 }
 
 dependencies {
@@ -31,6 +35,9 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
 
     compile 'org.littleshoot:littleproxy:1.1.0'
+    compile('com.github.ganskef:littleproxy-mitm:1.1.0') {
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
 
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
 }
