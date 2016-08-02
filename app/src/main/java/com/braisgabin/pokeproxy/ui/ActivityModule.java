@@ -17,6 +17,11 @@ public class ActivityModule {
   }
 
   @Provides
+  Activity activityProvider() {
+    return activity;
+  }
+
+  @Provides
   @ForActivity
   Context contextProvider() {
     return activity;

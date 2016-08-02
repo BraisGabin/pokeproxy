@@ -1,8 +1,9 @@
 package com.braisgabin.pokeproxy.utils;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.AsyncTask;
-import android.widget.Toast;
+
+import com.braisgabin.pokeproxy.ui.SetupActivity;
 
 import org.littleshoot.proxy.MitmManager;
 import org.littleshoot.proxy.mitm.Authority;
@@ -23,13 +24,13 @@ import javax.inject.Inject;
 import dagger.Lazy;
 
 public class CheckFactory {
-  private final Context context;
+  private final Activity activity;
   private final Authority authority;
   private final Lazy<MitmManager> mitm;
 
   @Inject
-  public CheckFactory(@ForActivity Context context, Authority authority, Lazy<MitmManager> mitm) {
-    this.context = context;
+  public CheckFactory(Activity activity, Authority authority, Lazy<MitmManager> mitm) {
+    this.activity = activity;
     this.authority = authority;
     this.mitm = mitm;
   }
@@ -74,7 +75,8 @@ public class CheckFactory {
     @Override
     protected void onPostExecute(Boolean needInstallCA) {
       if (needInstallCA) {
-        Toast.makeText(context, "Need setup", Toast.LENGTH_SHORT).show();
+        activity.startActivity(SetupActivity.getCallingIntent(activity));
+        activity.finish();
       }
     }
 

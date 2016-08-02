@@ -29,6 +29,12 @@ import okhttp3.Response;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
+  public static Intent getCallingIntent(Context context) {
+    final Intent intent = new Intent(context, MainActivity.class);
+
+    return intent;
+  }
+
   private OkHttpClient httpClient;
 
   @Inject
