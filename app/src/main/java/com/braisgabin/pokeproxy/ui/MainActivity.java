@@ -1,4 +1,4 @@
-package com.braisgabin.pokeproxy;
+package com.braisgabin.pokeproxy.ui;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -7,10 +7,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.braisgabin.pokeproxy.App;
+import com.braisgabin.pokeproxy.utils.CheckFactory;
+import com.braisgabin.pokeproxy.ProxyService;
+import com.braisgabin.pokeproxy.R;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,11 +31,19 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity {
   private OkHttpClient httpClient;
 
+  @Inject
+  CheckFactory checkFactory;
+
+  private CheckFactory.CheckImage check;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    App.component(this)
+        .plus(new ActivityModule(this))
+        .inject(this);
     ButterKnife.bind(this);
 
     // Don't try this at home.
@@ -45,6 +60,19 @@ public class MainActivity extends AppCompatActivity {
         return null;
       }
     }.execute();
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    this.check = checkFactory.create();
+    check.execute();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    check.cancel(true);
   }
 
   @OnClick(R.id.button)

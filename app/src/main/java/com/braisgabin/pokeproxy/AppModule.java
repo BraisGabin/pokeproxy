@@ -1,5 +1,9 @@
 package com.braisgabin.pokeproxy;
 
+import android.content.Context;
+
+import com.braisgabin.pokeproxy.utils.ForApplication;
+
 import org.littleshoot.proxy.MitmManager;
 import org.littleshoot.proxy.mitm.Authority;
 import org.littleshoot.proxy.mitm.CertificateSniffingMitmManager;
@@ -16,6 +20,12 @@ public class AppModule {
 
   public AppModule(App app) {
     this.app = app;
+  }
+
+  @Provides
+  @ForApplication
+  Context contextProvider() {
+    return app;
   }
 
   @Provides

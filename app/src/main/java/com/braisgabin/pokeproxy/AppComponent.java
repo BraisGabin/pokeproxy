@@ -1,5 +1,8 @@
 package com.braisgabin.pokeproxy;
 
+import com.braisgabin.pokeproxy.ui.ActivityComponent;
+import com.braisgabin.pokeproxy.ui.ActivityModule;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -11,5 +14,7 @@ import dagger.Component;
     }
 )
 public interface AppComponent {
+  ActivityComponent plus(ActivityModule activityModule);
+
   void inject(ProxyService service);
 }
